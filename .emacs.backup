@@ -1,0 +1,377 @@
+;;我用chenbin的~/.emacs.d之前的~/.emacs文件
+
+;;添加搜索目录
+(add-to-list 'load-path "~/emacs")
+
+
+
+;;加载linux设置,含有server,工作目录设置
+(load "linux.el")
+
+;;加载win设置,含有server,工作目录设置
+;;(load "win.el")
+
+
+
+
+
+;;将~备份统一保存到一文件夹
+(setq backup-directory-alist (quote (("." . "~/.backups"))))
+
+
+
+;;解决mark-set 选定（也会高亮选定区域）一个区域 然后按 backspace却只是删除光标最后所在位置的前面一个字符
+(delete-selection-mode 1)
+
+
+;;设置窗口位置
+(setq default-frame-alist
+'((top . 0) (left . 400) (height . 41) (width . 100)))
+
+
+
+;;设置开启的时候不显示欢迎界面：
+(setq inhibit-startup-message t)
+
+
+;; 以 y/n代表 yes/no
+(fset 'yes-or-no-p 'y-or-n-p) 
+
+
+;; 支持emacs和外部程序的粘贴
+(setq x-select-enable-clipboard t) 
+
+;; 在标题栏提示你目前在什么位置
+(setq frame-title-format "%b@emacs")  
+
+
+;; 去掉工具栏
+(tool-bar-mode nil)
+
+;;(set-scroll-bar-mode nil)
+;;取消滚动栏
+
+(customize-set-variable 'scroll-bar-mode 'right)
+;;设置滚动栏在窗口右侧，而默认是在左侧
+
+
+;;括号匹配时显示另外一边的括号，而不是烦人的跳到另一个括号。
+(show-paren-mode t)
+(setq show-paren-style 'parentheses)
+
+;;鼠标避开光标。
+(mouse-avoidance-mode 'animate)
+
+;;显示行号
+(global-linum-mode t)
+
+;; 显示列号（坐标形式）
+(setq column-number-mode t)
+(setq line-number-mode t)
+
+;; 语法高亮
+(global-font-lock-mode t)
+
+
+
+
+;;==============================================================
+;;c/c++设置
+;;==============================================================
+;;把c语言风格设置为k&r风格
+;;(add-hook 'c-mode-hook
+;;'(lambda ()
+;;(c-set-style "k&r")))
+
+;;set c++ style as stroustrup style
+;;(add-hook 'c++-mode-hook
+;;   '(lambda()
+;;   (c-set-style "stroustrup")))
+
+
+
+
+
+
+;;=============================================
+;;按键和缩进设置
+;;=============================================
+;;读取按键配置
+(load "kbd.el")
+
+;;关闭语法缩进, 这样就不会写php时不适应缩进
+;;(setq-default syntactic-indentation nil)这个关闭不了的。。。。。
+
+;; 回车缩进
+;;(global-set-key "\C-m" 'newline-and-indent)
+;;(global-set-key (kbd "C-<return>") 'newline)
+
+
+;;set indentation level
+(setq-default c-basic-offset 4)
+
+
+;;设置tab宽度
+(setq default-tab-width 4)
+
+;;用tab缩进
+(setq-default indent-tabs-mode t)
+
+;;If is t, always reindents the current line and does nothing else. 
+;;(setq-default tab-always-indent nil)
+
+;;hook住，防止indent-tabs-mode变成nil
+(add-hook 'c-mode-common-hook
+   (lambda () (setq indent-tabs-mode t)))
+(add-hook 'c++-mode-common-hook
+   (lambda () (setq indent-tabs-mode t)))
+
+
+;;(setq tab-stop-list ())
+;;(loop for x downfrom 40 to 1 do
+;;      (setq tab-stop-list (cons (* x 4) tab-stop-list)))
+  
+;;加载"块缩进"配置
+;;(load "indent.el") linux下无法工作， 不要了。。。
+;;另外，smart tabs也不行， emacs默认的才是最帮的
+
+
+
+
+
+
+;;===============================================================
+;;添加tabbar实现类似于浏览器的页签
+;;===============================================================
+(add-to-list 'load-path "~/emacs/tabbar")
+(require 'tabbar)
+(tabbar-mode)
+(global-set-key [(meta right)] 'tabbar-forward)
+(global-set-key [(meta left)] 'tabbar-backward)
+(global-set-key [(meta up)] 'tabbar-backward-group)
+(global-set-key [(meta down)] 'tabbar-forward-group)
+
+
+;;==============================================================
+;;gdb-UI配置
+;;==============================================================
+(setq gdb-many-windows t)
+;;(load-library "multi-gud.el")不用这两行也可以
+;;(load-library "multi-gdb-ui.el")
+
+;;==================================================
+;;cedet插件设置
+;;==================================================
+;;(add-to-list 'load-path "~/emacs/cedet-1.1/speedbar")
+;;(add-to-list 'load-path "~/emacs/cedet-1.1/eieio")
+(add-to-list 'load-path "~/emacs/cedet-1.1/semantic")
+;; Load CEDET.,从cedet的INSTALL中复制过来的
+;; See cedet/common/cedet.info for configuration details.
+(load-file "~/emacs/cedet-1.1/common/cedet.el")
+
+
+;; Enable EDE (Project Management) features
+(global-ede-mode 1)
+
+;; Enable EDE for a pre-existing C++ project
+;; (ede-cpp-root-project "NAME" :file "~/myproject/Makefile")
+
+
+;; Enabling Semantic (code-parsing, smart completion) features
+;; Select one of the following:
+
+;; * This enables the database and idle reparse engines
+;;(semantic-load-enable-minimum-features)
+
+;; * This enables some tools useful for coding, such as summary mode
+;;   imenu support, and the semantic navigator
+;;(semantic-load-enable-code-helpers)
+
+;; * This enables even more coding tools such as intellisense mode
+;;   decoration mode, and stickyfunc mode (plus regular code helpers)
+;; (semantic-load-enable-gaudy-code-helpers)
+
+;; * This enables the use of Exuberent ctags if you have it installed.
+;;   If you use C++ templates or boost, you should NOT enable it.
+;; (semantic-load-enable-all-exuberent-ctags-support)
+;;   Or, use one of these two types of support.
+;;   Add support for new languges only via ctags.
+;; (semantic-load-enable-primary-exuberent-ctags-support)
+;;   Add support for using ctags as a backup parser.
+;; (semantic-load-enable-secondary-exuberent-ctags-support)
+
+;; Enable SRecode (Template management) minor-mode.
+ ;;(global-srecode-minor-mode 1)
+ 
+ ;;----------------------------------------------------------------------
+(semantic-load-enable-minimum-features)
+(semantic-load-enable-code-helpers)
+;;(semantic-load-enable-guady-code-helpers)
+;;(semantic-load-enable-excessive-code-helpers)
+(semantic-load-enable-semantic-debugging-helpers)
+
+(global-ede-mode t)
+;;代码折叠
+;;(require 'semantic-tag-folding nil 'noerror)
+(global-semantic-tag-folding-mode 1)
+;;折叠和打开整个buffer的所有代码
+(define-key semantic-tag-folding-mode-map (kbd "C--") 'semantic-tag-folding-fold-all)
+(define-key semantic-tag-folding-mode-map (kbd "C-=") 'semantic-tag-folding-show-all)
+;;折叠和打开单个buffer的所有代码
+(define-key semantic-tag-folding-mode-map (kbd "C-_") 'semantic-tag-folding-fold-block)
+(define-key semantic-tag-folding-mode-map (kbd "C-+") 'semantic-tag-folding-show-block)
+
+;;==============================================================
+;;ecb配置
+;;==============================================================
+(add-to-list 'load-path "~/emacs/ecb-2.40")
+;;(require 'ecb)
+;;开启ecb用,M-x:ecb-activate
+(require 'ecb-autoloads)
+;;自动启动ecb并且不显示每日提示
+;;(require 'ecb)
+;;(setq ecb-auto-activate t)
+(setq ecb-tip-of-the-day nil)
+
+(require 'cc-mode)
+(c-set-offset 'inline-open 0)
+(c-set-offset 'friend '-)
+(c-set-offset 'substatement-open 0)
+
+
+(defun my-c-mode-common-hook()
+  (setq tab-width 4 indent-tabs-mode nil)
+  ;;; hungry-delete and auto-newline
+;;  (c-toggle-auto-hungry-state 1)
+  (define-key c-mode-base-map [(control \`)] 'hs-toggle-hiding)
+ (define-key c-mode-base-map [(return)] 'newline-and-indent)
+
+  (define-key c-mode-base-map [(meta \`)] 'c-indent-command)
+;;  (define-key c-mode-base-map [(tab)] 'hippie-expand)
+;;  (define-key c-mode-base-map [(tab)] 'my-indent-or-complete)
+;;  (define-key c-mode-base-map [(meta ?/)] 'semantic-ia-complete-symbol-menu)
+  ;;预处理设置
+  (setq c-macro-shrink-window-flag t)
+  (setq c-macro-preprocessor "cpp")
+  (setq c-macro-cppflags " ")
+  (setq c-macro-prompt-flag t)
+  (setq hs-minor-mode t)
+  (setq abbrev-mode t)
+)
+(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+(defun my-c++-mode-hook()
+  (setq tab-width 4 indent-tabs-mode nil)
+  (c-set-style "stroustrup")
+;;  (define-key c++-mode-map [f3] 'replace-regexp)
+)
+
+;;配置Semantic搜索范围
+(setq semanticdb-project-roots
+	  (list
+	   (expand-file-name "/")))
+;;自定义补全命令，如果单词在中间就补全，否则就tab
+(defun my-indent-or-complete()
+  (interactive)
+  (if (looking-at "\\>")
+	  (hippie-expand nil)
+	  (indent-for-tab-command))
+  )
+;;补全快捷键，ctrl+tab用senator补全，不显示列表
+;;alt+/补全，显示列表让选择
+(global-set-key [(control tab)] 'my-indent-or-complete)
+(define-key c-mode-base-map [(meta ?/)] 'semantic-ia-complete-symbol-menu)
+(autoload 'senator-try-expand-semantic "senator")
+(setq hippie-expand-try-functions-list
+	  '(
+		senator-try-expand-semantic
+		try-expand-dabbrev
+		try-expand-dabbrev-visible
+		try-expand-dabbrev-all-buffers
+		try-expand-dabbrev-from-kill
+		try-expand-list
+		try-expand-list-all-buffers
+		try-expand-line
+		try-expand-line-all-buffers
+		try-complete-file-name-partially
+		try-complete-file-name
+		try-expand-whole-kill
+		)
+	  )
+;;cc-mode的括号自动匹配
+;;(defun my-c-mode-auto-pair ()
+;;  (interactive)
+;;  (make-local-variable 'skeleton-pair-alist)
+;;  (setq skeleton-pair-alist  '(
+;;                   (?` ?` _ "''")
+;;                   (?\( ?  _ " )")
+;;                   (?\[ ?  _ " ]")
+;;                   (?{ \n > _ \n ?} >)))
+;;  (setq skeleton-pair t)
+;;  (local-set-key (kbd "(") 'skeleton-pair-insert-maybe)
+;;  (local-set-key (kbd "{") 'skeleton-pair-insert-maybe)
+;;  (local-set-key (kbd "`") 'skeleton-pair-insert-maybe)
+;;  (local-set-key (kbd "[") 'skeleton-pair-insert-maybe))
+;;(add-hook 'c-mode-hook 'my-c-mode-auto-pair)
+;;(add-hook 'c++-mode-hook 'my-c-mode-auto-pair)
+
+
+;;==========================================================
+;;加载cscope
+;;==========================================================
+;;(require 'xcscope)
+
+;;==========================================================
+;;YASnippet的配置
+;;==========================================================
+;;太强大了，强大的模板功能
+(add-to-list 'load-path "~/emacs/yasnippet-0.6.1c")
+(require 'yasnippet)    ;;not yasnippet-bundle
+(yas/initialize)
+(yas/load-directory "~/emacs/yasnippet-0.6.1c/snippets")
+
+;;自动补全
+;;(add-to-list 'load-path "~/emacs/auto-complete-1.3.1")
+;;(require 'auto-complete-config)
+;;(ac-config-default)
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(ecb-options-version "2.40"))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
+
+
+
+(defun my-indent-or-complete ()
+   (interactive)
+   (if (looking-at "\\>")
+      (hippie-expand nil)
+      (indent-for-tab-command))
+ )
+
+(global-set-key [(control tab)] 'my-indent-or-complete)
+(autoload 'senator-try-expand-semantic "senator")
+
+(setq hippie-expand-try-functions-list
+      '(
+        senator-try-expand-semantic
+        try-expand-dabbrev
+        try-expand-dabbrev-visible
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-expand-list
+        try-expand-list-all-buffers
+        try-expand-line
+        try-expand-line-all-buffers
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-whole-kill
+        )
+)
