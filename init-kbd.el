@@ -1,9 +1,36 @@
-(compile compile-command)
+
+;;============================================================
+;; 实现全屏效果，快捷键为f1
+(global-set-key [f1] 'my-fullscreen) 
+(defun my-fullscreen ()
+(interactive)
+(x-send-client-message
+nil 0 nil "_NET_WM_STATE" 32
+'(2 "_NET_WM_STATE_FULLSCREEN" 0))
+)
+
+
+;;f3为查找字符串,alt+f3关闭当前缓冲区
+;;(global-set-key [f3] 'grep-find)
+;;(global-set-key [M-f3] 'kill-this-buffer)
+
+;;.emacs中设一个speedbar的快捷键
+(global-set-key [(f4)] 'speedbar-get-focus)
+
+;;ctrl-f4,激活,ecb
+;;(global-set-key [C-f4] 'ecb-activate)没用ecb了
+
+;;  C-f5, 设置编译命令; f5, 保存当前文件然后编译
+(defun du-onekey-compile ()
+"Save buffers and start compile"
+(interactive)
+(save-some-buffers)
+(switch-to-buffer-other-window "*compilation*")
+(compile compile-command))
   
 (setq-default compile-command "make")    
 (global-set-key [C-f5] 'compile)
 (global-set-key [f5] 'du-onekey-compile)
-
 ;;F5显示/隐藏工具栏 方便调试
 (global-set-key [f7] 'tool-bar-mode)
 ;;ctrl-F5显示/隐藏菜单栏 ;; M-x menu-bar-open
@@ -35,7 +62,7 @@
 ;;(global-set-key [f9] 'other-window);f9在其他窗口之间旋转
 
 ;;设置C-F10为撤销
-;;(global-set-key [C-f10] 'undo) Ctrl+/已经是了
+(global-set-key [C-f10] 'undo)
 
 ;;设置F11快捷键指定Emacs 的日历系统
 (global-set-key [C-f11] 'calendar) 
@@ -85,7 +112,4 @@
 
 ;;C-z 设置标记
 (global-set-key (kbd "C-z") 'set-mark-command)
-
-
-;;================================================================
 
