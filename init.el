@@ -177,12 +177,40 @@
 ;;(require 'init-elnode)
 
 
+;;=====================以下是我自己加的===========================
+
+;;加载linux设置,含有server,工作目录设置
+(load "init-linux.el")
+
+;;加载win设置,含有server,工作目录设置
+;;(load "init-win.el")
+
+
+;;读取按键配置
+(load "init-kbd.el")
+
+
+;;加载tabbar
+;;为什么我这样子写不行啊(require 'init-tabbar)
+(load "init-tabbar.el")
+
+
+;;加载缩进配置
+(load "init-indent.el")
+
+;;加载ecb,原来ecb是需要cedet的。。。
+;;(load "init-ecb.el")
+
+;;(load "init-auto-complete.el")
+
+;;====================以上是我自己加的==============================
 
 ;;----------------------------------------------------------------------------
 ;; Variables configured via the interactive 'customize' interface
+;; expand-file-name要绝对路径啊?
 ;;----------------------------------------------------------------------------
-(if (file-readable-p (expand-file-name "custom.el"))
-     (load-file (expand-file-name "custom.el")))
+(if (file-readable-p (expand-file-name "~/.emacs.d/custom.el"))
+     (load-file (expand-file-name "~/.emacs.d/custom.el")))
 
 ;;----------------------------------------------------------------------------
 ;; Allow users to provide an optional "init-local" containing personal settings
